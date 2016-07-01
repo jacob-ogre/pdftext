@@ -9,9 +9,6 @@ make_main_dirs(verbose = FALSE)
 \arguments{
 \item{verbose}{Whether to print message with dirs created}
 }
-\value{
-A named list of created directories
-}
 \description{
 OCR'ing from PDFs requires creating one or more image files to be processed
 by \code{tesseract}. Page-by-page OCR is often needed, e.g., documents that

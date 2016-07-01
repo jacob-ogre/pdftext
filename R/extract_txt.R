@@ -27,6 +27,7 @@ pdf_to_txt <- function(file, thres = 0.2, verbose = TRUE) {
              paste0(options()$pdftext.wkdir, "/TXTs/", basename(file), ".txt")
            )
   )
+  message(paste("Out = ", out))
   if(!file.exists(out) | file.info(out)$size == 0) {
     if(verbose) message(paste("Extracting text from file", file))
     text <- pdftools::pdf_text(file)
@@ -61,6 +62,8 @@ ocr_pdf <- function(file, verbose = TRUE) {
   img_dir <- convert_to_imgs(file)
   img_ls <- get_sorted_files(img_dir, "png")
   txt_dir <- ocr_pages(img_ls)
+  message("Waiting a few seconds...")
+  Sys.sleep(3)
   outfile <- cat_pages(txt_dir)
 }
 
