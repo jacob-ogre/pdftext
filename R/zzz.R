@@ -45,7 +45,7 @@
   if(answer == "Y") {
     msg <- "Which directories should be copied? [images/pages/text; separate with spaces] "
     witch <- readline(msg)
-    saves <- stringr::strplit(witch, split = " ")
+    saves <- stringr::str_split(witch, pattern = " ")
     if("images" %in% saves) {
       img_loc <- readline("Where to save images? [path/to/save/dir] ")
       save_imgs(img_loc)

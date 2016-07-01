@@ -15,7 +15,7 @@ The path to the single, concatenated file
 \description{
 Uses \code{readLines} to build a list so that the form-feed metacharacter
 (\code{\\f}) can be used to separate pages in concatenated file. This allows
-both text from \link[pdf_text]{pdftools} and from OCR-ing to be handled in
+both text from \link[pdftools]{pdf_text} and from OCR-ing to be handled in
 the same way.
 }
 \examples{

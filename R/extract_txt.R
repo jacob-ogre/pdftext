@@ -50,8 +50,8 @@ pdf_to_txt <- function(file, thres = 0.2, verbose = TRUE) {
 #' perform optical character recognition (OCR) on a PDF.
 #'
 #' @param file Path to the PDF from which text will be extracted
-#' @param errfile The file to which Tesseract STDERR is written
-#' @seealso \code{\link{pdf_to_text}}
+#' @param verbose Print messages if TRUE; silent if FALSE
+#' @seealso \code{\link{pdf_to_txt}}
 #' @export
 #' @examples
 #' \dontrun{
@@ -70,6 +70,7 @@ ocr_pdf <- function(file, verbose = TRUE) {
 #' access pages independently.
 #'
 #' @param file Path to a PDF to be converted to per-page images
+#' @param verbose Whether to print processing messages [TRUE]
 #' @return Directory to which the per-page images are saved
 #' @export
 #' @examples
@@ -132,15 +133,16 @@ get_sorted_files <- function(path, ext) {
 #' \link{set_tess_conf}.
 #'
 #' @param pngs A listing of the temp PNG directory for a PDF
+#' @param verbose Whether to print processing messages [TRUE]
 #' @return The path to the OCR'd text file
-#' @seealso \code{\link{pdf_to_text}}
+#' @seealso \code{\link{pdf_to_txt}}
 #' @importFrom stringr str_split
 #' @export
 #' @examples
 #' \dontrun{
 #' res <- ocr_pages("test.pdf")
 #' }
-ocr_pages <- function(pngs) {
+ocr_pages <- function(pngs, verbose = TRUE) {
   res <- list()
   file_dir <- stringr::str_split(pngs[1], "\\.")[[1]][1]
   pngs <- suppressWarnings(
@@ -169,7 +171,7 @@ ocr_pages <- function(pngs) {
 #'
 #' Uses \code{readLines} to build a list so that the form-feed metacharacter
 #' (\code{\\f}) can be used to separate pages in concatenated file. This allows
-#' both text from \link[pdf_text]{pdftools} and from OCR-ing to be handled in
+#' both text from \link[pdftools]{pdf_text} and from OCR-ing to be handled in
 #' the same way.
 #'
 #' @param files A vector of TXT files to be concatenated

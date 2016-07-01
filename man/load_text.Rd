@@ -15,7 +15,7 @@ A list of one element per page, with a vector of lines per element
 \description{
 \link{pdf_to_txt} writes PDF contents to .txt files rather than loading
 them directly. This helper function loads both types of files to a list,
-such as one returned by \link[pdf_text]{pdftools}.
+such as one returned by \link[pdftools]{pdf_text}.
 }
 \examples{
 # load_text("doc1234.rda")

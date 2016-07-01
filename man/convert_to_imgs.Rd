@@ -8,6 +8,8 @@ convert_to_imgs(file, verbose = TRUE)
 }
 \arguments{
 \item{file}{Path to a PDF to be converted to per-page images}
+
+\item{verbose}{Whether to print processing messages [TRUE]}
 }
 \value{
 Directory to which the per-page images are saved

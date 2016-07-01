@@ -8,7 +8,7 @@
 \description{
 pdftext provides tools to extract text from PDFs, whether they have an
 embedded text layer and can be extracted with, e.g.,
-\link[pdf_text]{pdftools}; or are purely image-based PDFs that require
+\link[pdftools]{pdf_text}; or are purely image-based PDFs that require
 optical character recognition (OCR).
 }
 \details{
@@ -16,7 +16,7 @@ The main function of pdftext, \code{\link{pdf_to_txt}}, gets the text either
 by extracting from the text layer (if available) or by OCR (if image-based)
 and writes the text to a file. The helper function \code{\link{load_text}}
 will read one of those text files and return a list, with each element of the
-list a single page (as done with \code{\link[pdf_text]{pdftools}}). The
+list a single page (as done with \code{\link[pdftools]{pdf_text}}). The
 "workhorse" functions for generating images for OCR and doing the OCR, are
 exposed so they can be used easily in other contexts.
 

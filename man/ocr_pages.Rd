@@ -4,10 +4,12 @@
 \alias{ocr_pages}
 \title{Perform optical character recognition on PNGs.}
 \usage{
-ocr_pages(pngs)
+ocr_pages(pngs, verbose = TRUE)
 }
 \arguments{
 \item{pngs}{A listing of the temp PNG directory for a PDF}
+
+\item{verbose}{Whether to print processing messages [TRUE]}
 }
 \value{
 The path to the OCR'd text file
@@ -24,6 +26,6 @@ res <- ocr_pages("test.pdf")
 }
 }
 \seealso{
-\code{\link{pdf_to_text}}
+\code{\link{pdf_to_txt}}
 }
 

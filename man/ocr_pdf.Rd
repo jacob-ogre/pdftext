@@ -9,7 +9,7 @@ ocr_pdf(file, verbose = TRUE)
 \arguments{
 \item{file}{Path to the PDF from which text will be extracted}
 
-\item{errfile}{The file to which Tesseract STDERR is written}
+\item{verbose}{Print messages if TRUE; silent if FALSE}
 }
 \description{
 Uses Imagemagick and Tesseract (which must be installed and on the $PATH) to
@@ -21,6 +21,6 @@ res <- ocr_pdf("test.pdf")
 }
 }
 \seealso{
-\code{\link{pdf_to_text}}
+\code{\link{pdf_to_txt}}
 }
 
