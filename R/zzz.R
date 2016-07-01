@@ -44,27 +44,27 @@
 }
 
 .onUnload <- function(libname) {
-  answer <- readline("Do you want to copy files from the tempdir? [Y/N/C] ")
-  if(answer == "Y") {
-    msg <- "Which directories should be copied? [images/pages/text; separate with spaces] "
-    witch <- readline(msg)
-    saves <- stringr::str_split(witch, pattern = " ")
-    if("images" %in% saves) {
-      img_loc <- readline("Where to save images? [path/to/save/dir] ")
-      save_imgs(img_loc)
-    }
-    if("pages" %in% saves) {
-      pgs_loc <- readline("Where to save pages of text? [path/to/save/dir] ")
-      save_pages(pgs_loc)
-    }
-    if("text" %in% saves) {
-      txt_loc <- readline("Where to save concatenated text? [path/to/save/dir] ")
-      save_txts(txt_loc)
-    }
-  } else if(answer == "C") {
-    message(paste0("Sorry, can't cancel now; files are at: ",
-                   options()$pdftext.wkdir))
-  } else {
-    message(paste0("OK, the files and directories are at: ", tempdir()))
-  }
+  # answer <- readline("Do you want to copy files from the tempdir? [Y/N/C] ")
+  # if(answer == "Y") {
+  #   msg <- "Which directories should be copied? [images/pages/text; separate with spaces] "
+  #   witch <- readline(msg)
+  #   saves <- stringr::str_split(witch, pattern = " ")
+  #   if("images" %in% saves) {
+  #     img_loc <- readline("Where to save images? [path/to/save/dir] ")
+  #     save_imgs(img_loc)
+  #   }
+  #   if("pages" %in% saves) {
+  #     pgs_loc <- readline("Where to save pages of text? [path/to/save/dir] ")
+  #     save_pages(pgs_loc)
+  #   }
+  #   if("text" %in% saves) {
+  #     txt_loc <- readline("Where to save concatenated text? [path/to/save/dir] ")
+  #     save_txts(txt_loc)
+  #   }
+  # } else if(answer == "C") {
+  #   message(paste0("Sorry, can't cancel now; files are at: ",
+  #                  options()$pdftext.wkdir))
+  # } else {
+  #   message(paste0("OK, the files and directories are at: ", tempdir()))
+  # }
 }
