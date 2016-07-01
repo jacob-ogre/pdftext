@@ -94,7 +94,7 @@ convert_to_imgs <- function(file, verbose = TRUE) {
   if(!file.exists(test_file)) {
     if(verbose) message(paste("Making PNGs of file", file))
     cmd <- paste0("convert -density 600 -quality 90 ", file, " ", out)
-    system(cmd, wait = TRUE)
+    res <- system(cmd, intern = TRUE)
   }
   return(dirname(out))
 }
@@ -165,7 +165,7 @@ ocr_pages <- function(pngs, verbose = TRUE) {
                     " -l eng ", options()$pdftext.tess_conf,
                     " &> ", err_file)
       if(verbose) message(paste("OCR-ing", i))
-      system(cmd, wait = TRUE)
+      res <- system(cmd, intern = TRUE)
     }
     res <- c(res, out_file)
   }
