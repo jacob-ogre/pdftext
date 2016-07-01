@@ -42,3 +42,17 @@ load_text <- function(file) {
 set_tess_conf <- function(conf) {
   options("pdftext.tess_conf" = conf)
 }
+
+#' Set the option for the working directory
+#'
+#' \code{pdftext} needs a place to put various files during OCR, e.g., PNGs and
+#' pages from running \code{tesseract}
+#'
+#' @param wkdir Absolute path to the working directory (where PDFs/ lives)
+#' @return Nothing
+#' @export
+#' @examples
+#' set_wkdir("/datadrive/data")
+set_wkdir <- function(wkdir) {
+  options("pdftext.wkdir" = wkdir)
+}

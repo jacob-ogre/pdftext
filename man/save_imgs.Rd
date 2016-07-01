@@ -2,7 +2,7 @@
 % Please edit documentation in R/dir_mgmt.R
 \name{save_imgs}
 \alias{save_imgs}
-\title{Save the images directory from tempdir}
+\title{Save the images directory from options()$pdftext.wkdir}
 \usage{
 save_imgs(dest)
 }
@@ -14,7 +14,7 @@ TRUE if copy succeeds, else FALSE
 }
 \description{
 PDFs are split into individual pages for OCR and images from each PDF are
-saved to a subdirectory of tempdir()/IMGs/. This is a helper to copy the
+saved to a subdirectory of pdftext.wkdir/IMGs/. This is a helper to copy the
 subdirectories and files to a permanent location.
 }
 \examples{

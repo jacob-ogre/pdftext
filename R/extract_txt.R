@@ -24,7 +24,7 @@
 pdf_to_txt <- function(file, thres = 0.2, verbose = TRUE) {
   out <- suppressWarnings(
            normalizePath(
-             paste0(tempdir(), "/TXTs/", basename(file), ".txt")
+             paste0(options()$pdftext.wkdir, "/TXTs/", basename(file), ".txt")
            )
   )
   if(!file.exists(out) | file.info(out)$size == 0) {
@@ -79,7 +79,7 @@ ocr_pdf <- function(file, verbose = TRUE) {
 #' }
 convert_to_imgs <- function(file, verbose = TRUE) {
   out <- suppressWarnings(normalizePath(
-           paste0(tempdir(), "/IMGs/",
+           paste0(options()$pdftext.wkdir, "/IMGs/",
                   stringr::str_replace(basename(file), "\\.[a-z]{3}$", ""),
                   "/", basename(file), ".png")
          ))
@@ -147,7 +147,7 @@ ocr_pages <- function(pngs, verbose = TRUE) {
   file_dir <- stringr::str_split(pngs[1], "\\.")[[1]][1]
   pngs <- suppressWarnings(
             normalizePath(
-              paste0(tempdir(), "/IMGs/", file_dir, "/", pngs)
+              paste0(options()$pdftext.wkdir, "/IMGs/", file_dir, "/", pngs)
             )
   )
   for(i in pngs) {

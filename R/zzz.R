@@ -1,6 +1,15 @@
 # BSD_2_clause
 
 .onLoad <- function(libname, pkgname) {
+  # set some options
+  op <- options()
+  op.pdftext <- list(
+    pdftext.tess_conf = "",
+    pdftext.wkdir = "~/"
+  )
+  toset <- !(names(op.pdftext) %in% names(op))
+  if(any(toset)) options(op.pdftext[toset])
+
   gs_cmd <- "which gs"
   conv_cmd <- "which convert"
   pdftk_cmd <- "which pdftk"
@@ -14,26 +23,20 @@
     }
   }
 
-  # create the tempdir() directories
-  make_main_dirs()
-
-  # set some options
-  op <- options()
-  op.pdftext <- list(
-    pdftext.tess_conf = ""
-  )
-  toset <- !(names(op.pdftext) %in% names(op))
-  if(any(toset)) options(op.pdftext[toset])
+  # # create the tempdir() directories
+  # make_main_dirs(verbose = TRUE)
 
   invisible()
 }
 
 .onAttach <- function(libname, pkgname) {
   packageStartupMessage(
-    "\npdftext is attached. To use a custom config file, run\n",
-    "\n",
-    "    set_tess_conf('name_of_conf')\n",
-    "\n",
+    "\npdftext is attached. To set the working directory (e.g., where\n",
+    "the directory with PDFs resides) where OCR and TXT files will be\n",
+    "written, run\n\n",
+    "    set_wkdir('path/to/wkdir')\n\n",
+    "To use a custom config file for tesseract, run\n\n",
+    "    set_tess_conf('name_of_conf')\n\n",
     "where 'name_of_conf' is a file located in $TESS_DATA/configs. See\n",
     "https://goo.gl/QGDFP2 for more information. An example config can\n",
     "be seen with data(asciimostly).\n"
@@ -59,7 +62,8 @@
       save_txts(txt_loc)
     }
   } else if(answer == "C") {
-    message(paste0("Sorry, can't cancel now; files are at: ", tempdir()))
+    message(paste0("Sorry, can't cancel now; files are at: ",
+                   options()$pdftext.wkdir))
   } else {
     message(paste0("OK, the files and directories are at: ", tempdir()))
   }
