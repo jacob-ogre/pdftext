@@ -8,7 +8,6 @@
 #' creates the top-level directories expected by the \link{pdftext} package.
 #'
 #' @param verbose Whether to print message with dirs created
-#' @return A named list of created directories
 #' @seealso if any see alsos
 #' @export
 #' @examples
@@ -43,7 +42,6 @@ make_main_dirs <- function(verbose = FALSE) {
   msg <- paste("Created temp directories:", dirs,
                sep = "\n\t")
   if(verbose) message(msg)
-  return(dir)
 }
 
 #' Save the images directory from options()$pdftext.wkdir

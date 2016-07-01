@@ -155,6 +155,7 @@ ocr_pages <- function(pngs, verbose = TRUE) {
     out_file <- gsub(txt_base, pattern = "IMGs", replacement = "PAGEs")
     err_file <- gsub(txt_base, pattern = "IMGs", replacement = "ERRs")
     if(!dir.exists(dirname(out_file))) dir.create(dirname(out_file))
+    if(!dir.exists(dirname(err_file))) dir.create(dirname(err_file))
     if(!file.exists(paste0(out_file, ".txt"))) {
       cmd <- paste0("tesseract ", i, " ", out_file,
                     " -l eng ", options()$pdftext.tess_conf,

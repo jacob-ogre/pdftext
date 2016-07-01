@@ -17,10 +17,10 @@ load_text <- function(file) {
   if(stringr::str_detect(file, "rda$")) {
     return(load(file))
   } else if (stringr::str_detect(file, "txt$")) {
-    text <- readLines(file)
+    text <- paste(readLines(file), collapse = "\n")
     pages <- stringr::str_split(text, "\n\f")
-    pages <- lapply(pages[[1]], stringr::str_split, "\n")
-    pages <- lapply(pages, as.vector)
+    pages <- lapply(pages, stringr::str_split, "\n")
+    pages <- unlist(pages, recursive = FALSE)
     return(pages)
   } else {
     stop("Unhandled file type; see `?load_text`.")
