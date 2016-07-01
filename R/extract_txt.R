@@ -24,10 +24,11 @@
 pdf_to_txt <- function(file, thres = 0.2, verbose = TRUE) {
   out <- suppressWarnings(
            normalizePath(
-             paste0(options()$pdftext.wkdir, "/TXTs/", basename(file), ".txt")
+             paste0(options()$pdftext.wkdir, "/TXTs/",
+                    basename(file), ".txt")
            )
   )
-  message(paste("Out = ", out))
+  out <- gsub(out, pattern = "\\.pdf\\.txt$", replacement = ".txt")
   if(!file.exists(out) | file.info(out)$size == 0) {
     if(verbose) message(paste("Extracting text from file", file))
     text <- pdftools::pdf_text(file)
@@ -195,7 +196,8 @@ cat_pages <- function(files) {
                   paste0(out_dir, "/", base_name)
                 )
   )
-  text <- lapply(files, readLines)
+  res <- try(text <- lapply(files, readLines))
+  # if(class(res) == "try-error") message(res)
   text <- lapply(text, paste, collapse = "\n")
   text <- paste(text, collapse = "\n\f")
   write(text, file = out_file)
