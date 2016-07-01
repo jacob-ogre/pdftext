@@ -1,6 +1,6 @@
 ## pdftext
 
-A package to extract text from PDFs
+An R package to extract text from PDFs
 
 pdftext provides tools to extract text from PDFs, whether they have an embedded text layer and can be extracted with, e.g., `pdftools::pdf_text`; or are purely image-based PDFs that require optical character recognition (OCR).
 
