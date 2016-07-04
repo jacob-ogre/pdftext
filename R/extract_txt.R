@@ -112,7 +112,7 @@ convert_to_imgs <- function(file, verbose = TRUE) {
 #' run_unpaper("IMGs/test")
 #' }
 run_unpaper <- function(png_dir) {
-  for(inf in list.files(png_dir, pattern = "png$")) {
+  for(inf in list.files(png_dir, pattern = "[0-9]+[^-up].png$")) {
     inf <- paste0(png_dir, "/", inf)
     # first to PNM format
     out <- stringr::str_replace(inf, pattern = "png$", "pgm")
@@ -125,7 +125,8 @@ run_unpaper <- function(png_dir) {
     # now for unpaper
     out2 <- stringr::str_replace(out, pattern = "\\.pgm$", "-up.pgm")
     if(!file.exists(out2)) {
-      cmd <- paste0("unpaper --dpi 600 --no-grayfilter ", out, " ", out2)
+      cmd <- paste0("unpaper --overwrite --dpi 600 --no-grayfilter ",
+                    out, " ", out2)
       res <- system(cmd, intern = TRUE,
                     ignore.stdout = TRUE, ignore.stderr = TRUE)
     }
@@ -237,6 +238,7 @@ ocr_pages <- function(pngs, verbose = TRUE) {
 #' @examples
 #' # cat_pages(fil_list)
 cat_pages <- function(files) {
+  message(files)
   out_dir <- dirname(dirname(files[1]))
   out_dir <- stringr::str_replace(out_dir, "PAGEs", "TXTs")
   base_name <- paste0(stringr::str_split(basename(files[1]),
@@ -246,6 +248,7 @@ cat_pages <- function(files) {
                   paste0(out_dir, "/", base_name)
                 )
   )
+  message(paste0("out_file: ", out_file))
   text <- lapply(files, readLines)
   text <- lapply(text, paste, collapse = "\n")
   text <- paste(text, collapse = "\n\f")

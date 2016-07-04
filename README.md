@@ -15,7 +15,7 @@ user's $PATH:
 - convert, which is used to convert PDFs to images, is part of [ImageMagick](http://www.imagemagick.org/script/binary-releases.php); and
 - unpaper, which is used to prep page images for OCR, can be installed with a package manager like `apt` (Linux Debian distros) or `homebrew` (OS X), or by forking the [repo](https://github.com/Flameeyes/unpaper) and compiling.
 
-Install these two applications and you're one step away from having a working package.
+Install these three applications and you're one step away from having a working package. The last step is to set a couple of options (optionally), as indicated in the startup message when `pdftext` is loaded.
 
 ### Questions? 
 
