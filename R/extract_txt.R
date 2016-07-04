@@ -203,6 +203,7 @@ ocr_pages <- function(pngs, verbose = TRUE) {
             )
   )
   for(i in pngs) {
+    message(i)
     txt_base <- gsub(i, pattern = ".png", replacement = "", fixed = TRUE)
     out_file <- gsub(txt_base, pattern = "IMGs", replacement = "PAGEs")
     err_file <- gsub(txt_base, pattern = "IMGs", replacement = "ERRs")
