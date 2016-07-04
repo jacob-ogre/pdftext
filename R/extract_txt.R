@@ -173,7 +173,7 @@ get_sorted_files <- function(path, ext) {
   nums <- stringr::str_match(files, "[0-9]+-up\\.png$")
   nums <- sort(as.numeric(gsub(nums, pattern = "-up\\.png$", replacement = "")))
   prefix <- stringr::str_split(files[1], "-[0-9]")[[1]][1]
-  sort_file <- paste0(prefix, "-", nums, ".", ext)
+  sort_file <- paste0(prefix, "-", nums, "-up.", ext)
   return(sort_file)
 }
 
@@ -195,6 +195,7 @@ get_sorted_files <- function(path, ext) {
 #' res <- ocr_pages("test.pdf")
 #' }
 ocr_pages <- function(pngs, verbose = TRUE) {
+  message(pngs)
   res <- list()
   file_dir <- stringr::str_split(pngs[1], "\\.")[[1]][1]
   pngs <- suppressWarnings(
