@@ -6,8 +6,8 @@ Description: A large batch of PDFs may contain a mix of text-based and image-
     based PDFs, and one needs to extract the text from all of these files for
     analysis. This package offers a single primary function to perform text
     extraction from PDFs by trying the poppler library's wrapper in pdftools;
-    if that fails, then Imagemagick and Tesseract are used to perform Optical
-    Character Recognition.
+    if that fails, then Imagemagick, unpaper, and Tesseract are used to perform
+    Optical Character Recognition.
 Depends:
     R (>= 3.2.3)
 License: BSD_2_clause + file LICENSE
