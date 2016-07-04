@@ -136,7 +136,6 @@ run_unpaper <- function(png_dir) {
     # now back to PNG + -blur 2x2; has to be done in two steps because a direct
     # call of convert...-blur 2x2 on a pbm just fails.
     out3 <- stringr::str_replace(out2, pattern = "-up.pgm$", "-up.png")
-    message(out3)
     if(!file.exists(out3)) {
       cmd <- paste0("convert -density 600 -quality 90 ", out2, " ", out3)
       res <- system(cmd, intern = TRUE,
@@ -211,6 +210,8 @@ ocr_pages <- function(pngs, fin_file, verbose = TRUE) {
     txt_base <- gsub(i, pattern = ".png$", replacement = "", fixed = TRUE)
     out_file <- gsub(txt_base, pattern = "IMGs", replacement = "PAGEs")
     err_file <- gsub(txt_base, pattern = "IMGs", replacement = "ERRs")
+    message(paste("current out_file:", out_file))
+    message(paste("current err_file:", err_file))
     if(!dir.exists(dirname(out_file))) dir.create(dirname(out_file))
     if(!dir.exists(dirname(err_file))) dir.create(dirname(err_file))
     if(!file.exists(paste0(out_file, ".txt"))) {
