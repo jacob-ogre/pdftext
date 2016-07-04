@@ -61,10 +61,9 @@ pdf_to_txt <- function(file, thres = 0.2, verbose = TRUE) {
 #' }
 ocr_pdf <- function(file, verbose = TRUE) {
   img_dir <- convert_to_imgs(file)
+  img_dir <- run_unpaper(img_dir)
   img_ls <- get_sorted_files(img_dir, "png")
   txt_dir <- ocr_pages(img_ls)
-  message("Waiting a few seconds...")
-  Sys.sleep(3)
   outfile <- cat_pages(txt_dir)
 }
 
@@ -99,6 +98,42 @@ convert_to_imgs <- function(file, verbose = TRUE) {
   return(dirname(out))
 }
 
+#' Run \code{unpaper} to fix rotation angles
+#'
+#' A significant number of scanned PDFs are slightly rotated, and even a 1-
+#' degree rotation can substantially reduce the accuracy of OCR. This is a
+#' computationally expensive step, but works much better than not doing it.
+#'
+#' @param png_dir Path to a directory of raw PNGs
+#' @return Nothing
+#' @export
+#' @examples
+#' \dontrun{
+#' run_unpaper("IMGs/test/test.png")
+#' }
+run_unpaper <- function(png_dir) {
+  for(inf in list.files(png_dir)) {
+    # first to PNM format
+    out <- stringr::str_replace(inf, pattern = "png$", "pbm")
+    cmd <- paste0("convert -density 600 -quality 90 ", inf, " ", out)
+    res <- system(cmd, intern = TRUE, ignore.stdout = TRUE, ignore.stderr = TRUE)
+
+    # now for unpaper
+    out2 <- stringr::str_replace(out, pattern = "\\.pbm$", "-up.pbm")
+    cmd <- paste0("unpaper --dpi 600 --no-grayfilter ", out, " ", out2)
+    res <- system(cmd, intern = TRUE, ignore.stdout = TRUE, ignore.stderr = TRUE)
+
+    # now back to PNG + -blur 2x2
+    out3 <- stringr::str_replace(inf, pattern = "-up.pbm$", "-up.png")
+    cmd <- paste0("convert -density 600 -quality 90 ", out2, " ", out3)
+    res <- system(cmd, intern = TRUE, ignore.stdout = TRUE, ignore.stderr = TRUE)
+    cmd <- paste0("convert -density 600 -quality 90 -blur 2x2", out3, " ", out3)
+    res <- system(cmd, intern = TRUE, ignore.stdout = TRUE, ignore.stderr = TRUE)
+  }
+  system(paste0("rm ", png_dir, "/*.pbm"))
+  return(png_dir)
+}
+
 #' Return a list of correctly sorted imgs for Tesseract OCR
 #'
 #' We need the list of PNGs to be sorted correctly, but \code{list.files}
@@ -122,8 +157,8 @@ convert_to_imgs <- function(file, verbose = TRUE) {
 #' }
 get_sorted_files <- function(path, ext) {
   files <- list.files(path)
-  nums <- stringr::str_match(files, "[0-9]+\\.[a-z]{3}$")
-  nums <- sort(as.numeric(gsub(nums, pattern = "\\.[a-z]{3}$", replacement = "")))
+  nums <- stringr::str_match(files, "[0-9]+-up\\.png$")
+  nums <- sort(as.numeric(gsub(nums, pattern = "\\.png$", replacement = "")))
   prefix <- stringr::str_split(files[1], "-[0-9]")[[1]][1]
   sort_file <- paste0(prefix, "-", nums, ".", ext)
   return(sort_file)
