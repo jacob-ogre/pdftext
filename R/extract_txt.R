@@ -169,7 +169,7 @@ run_unpaper <- function(png_dir) {
 #' # doc1-2.png, ...)
 #' }
 get_sorted_files <- function(path, ext) {
-  files <- list.files(path)
+  files <- list.files(path, pattern = "-up.png$")
   nums <- stringr::str_match(files, "[0-9]+-up\\.png$")
   nums <- sort(as.numeric(gsub(nums, pattern = "-up\\.png$", replacement = "")))
   prefix <- stringr::str_split(files[1], "-[0-9]")[[1]][1]
