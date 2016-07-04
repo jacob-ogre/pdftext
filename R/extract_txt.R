@@ -206,7 +206,7 @@ ocr_pages <- function(pngs, verbose = TRUE) {
   )
   for(i in pngs) {
     message(i)
-    txt_base <- gsub(i, pattern = ".png", replacement = "", fixed = TRUE)
+    txt_base <- gsub(i, pattern = ".png$", replacement = "", fixed = TRUE)
     out_file <- gsub(txt_base, pattern = "IMGs", replacement = "PAGEs")
     err_file <- gsub(txt_base, pattern = "IMGs", replacement = "ERRs")
     if(!dir.exists(dirname(out_file))) dir.create(dirname(out_file))
@@ -216,7 +216,7 @@ ocr_pages <- function(pngs, verbose = TRUE) {
                     " -l eng ", options()$pdftext.tess_conf,
                     " &> ", err_file)
       if(verbose) message(paste("OCR-ing", i))
-      res <- system(cmd, intern = TRUE)
+      tmp <- system(cmd, intern = TRUE)
     }
     res <- c(res, out_file)
   }
