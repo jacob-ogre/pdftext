@@ -15,7 +15,7 @@
 #'
 #' \emph{SYSTEM DEPENDENCIES}
 #'
-#' pdftext depends on two applications that must be installed and on the
+#' pdftext depends on three applications that must be installed and on the
 #' user's $PATH:
 #'
 #' \itemize{
@@ -23,7 +23,11 @@
 #'   the directions at \url{https://github.com/tesseract-ocr/tesseract/wiki}}
 #' \item{\code{convert}, which is used to convert PDFs to images, is part of
 #'   \href{http://www.imagemagick.org/script/binary-releases.php}{ImageMagick}}
+#' \item{\code{unpaper}, which is needed to automate pre-OCR cleanup (e.g.,
+#'   rotation), from \href{http://brew.sh}{Homebrew}, another package manager, or
+#'   \href{https://github.com/Flameeyes/unpaper}{source on GitHub}.
 #'   }
+#' }
 #'
 #' Install these two applications and you're one step away from having a working
 #' package.

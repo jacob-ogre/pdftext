@@ -21,7 +21,7 @@
 #' \dontrun{
 #' res <- pdf_to_txt("test.pdf")
 #' }
-pdf_to_txt <- function(file, thres = 0.2, verbose = TRUE) {
+pdf_to_txt <- function(file, thres = 0.2, verbose = TRUE, force = TRUE) {
   out <- suppressWarnings(
            normalizePath(
              paste0(options()$pdftext.wkdir, "/TXTs/",
@@ -29,7 +29,7 @@ pdf_to_txt <- function(file, thres = 0.2, verbose = TRUE) {
            )
   )
   out <- gsub(out, pattern = "\\.pdf\\.txt$", replacement = ".txt")
-  if(!file.exists(out) | file.info(out)$size == 0) {
+  if(!file.exists(out) | file.info(out)$size < 10 | force == TRUE) {
     if(verbose) message(paste("Extracting text from file", file))
     text <- pdftools::pdf_text(file)
     ratio <- sum(text == "") / length(text)
@@ -105,32 +105,45 @@ convert_to_imgs <- function(file, verbose = TRUE) {
 #' computationally expensive step, but works much better than not doing it.
 #'
 #' @param png_dir Path to a directory of raw PNGs
-#' @return Nothing
+#' @return png_dir Path to a directory with 'unpaper'-ed PNGs
 #' @export
 #' @examples
 #' \dontrun{
-#' run_unpaper("IMGs/test/test.png")
+#' run_unpaper("IMGs/test")
 #' }
 run_unpaper <- function(png_dir) {
-  for(inf in list.files(png_dir)) {
+  for(inf in list.files(png_dir, pattern = "png$")) {
+    inf <- paste0(png_dir, "/", inf)
     # first to PNM format
-    out <- stringr::str_replace(inf, pattern = "png$", "pbm")
-    cmd <- paste0("convert -density 600 -quality 90 ", inf, " ", out)
-    res <- system(cmd, intern = TRUE, ignore.stdout = TRUE, ignore.stderr = TRUE)
+    out <- stringr::str_replace(inf, pattern = "png$", "pgm")
+    if(!file.exists(out)) {
+      cmd <- paste0("convert -density 600 -quality 90 ", inf, " ", out)
+      res <- system(cmd, intern = TRUE,
+                    ignore.stdout = TRUE, ignore.stderr = TRUE)
+    }
 
     # now for unpaper
-    out2 <- stringr::str_replace(out, pattern = "\\.pbm$", "-up.pbm")
-    cmd <- paste0("unpaper --dpi 600 --no-grayfilter ", out, " ", out2)
-    res <- system(cmd, intern = TRUE, ignore.stdout = TRUE, ignore.stderr = TRUE)
+    out2 <- stringr::str_replace(out, pattern = "\\.pgm$", "-up.pgm")
+    if(!file.exists(out2)) {
+      cmd <- paste0("unpaper --dpi 600 --no-grayfilter ", out, " ", out2)
+      res <- system(cmd, intern = TRUE,
+                    ignore.stdout = TRUE, ignore.stderr = TRUE)
+    }
 
-    # now back to PNG + -blur 2x2
-    out3 <- stringr::str_replace(inf, pattern = "-up.pbm$", "-up.png")
-    cmd <- paste0("convert -density 600 -quality 90 ", out2, " ", out3)
-    res <- system(cmd, intern = TRUE, ignore.stdout = TRUE, ignore.stderr = TRUE)
-    cmd <- paste0("convert -density 600 -quality 90 -blur 2x2", out3, " ", out3)
-    res <- system(cmd, intern = TRUE, ignore.stdout = TRUE, ignore.stderr = TRUE)
+    # now back to PNG + -blur 2x2; has to be done in two steps because a direct
+    # call of convert...-blur 2x2 on a pbm just fails.
+    out3 <- stringr::str_replace(out2, pattern = "-up.pgm$", "-up.png")
+    message(out3)
+    if(!file.exists(out3)) {
+      cmd <- paste0("convert -density 600 -quality 90 ", out2, " ", out3)
+      res <- system(cmd, intern = TRUE,
+                    ignore.stdout = TRUE, ignore.stderr = TRUE)
+      cmd <- paste0("convert -density 600 -quality 90 -blur 2x2 ", out3, " ", out3)
+      res <- system(cmd, intern = TRUE,
+                    ignore.stdout = TRUE, ignore.stderr = TRUE)
+    }
   }
-  system(paste0("rm ", png_dir, "/*.pbm"))
+  system(paste0("rm ", png_dir, "/*.pgm"))
   return(png_dir)
 }
 
@@ -158,7 +171,7 @@ run_unpaper <- function(png_dir) {
 get_sorted_files <- function(path, ext) {
   files <- list.files(path)
   nums <- stringr::str_match(files, "[0-9]+-up\\.png$")
-  nums <- sort(as.numeric(gsub(nums, pattern = "\\.png$", replacement = "")))
+  nums <- sort(as.numeric(gsub(nums, pattern = "-up\\.png$", replacement = "")))
   prefix <- stringr::str_split(files[1], "-[0-9]")[[1]][1]
   sort_file <- paste0(prefix, "-", nums, ".", ext)
   return(sort_file)
@@ -232,7 +245,7 @@ cat_pages <- function(files) {
                 )
   )
   res <- try(text <- lapply(files, readLines))
-  # if(class(res) == "try-error") message(res)
+  if(class(res) == "try-error") message(res)
   text <- lapply(text, paste, collapse = "\n")
   text <- paste(text, collapse = "\n\f")
   write(text, file = out_file)
