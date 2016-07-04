@@ -60,11 +60,13 @@ pdf_to_txt <- function(file, thres = 0.2, verbose = TRUE, force = TRUE) {
 #' res <- ocr_pdf("test.pdf")
 #' }
 ocr_pdf <- function(file, verbose = TRUE) {
+  outf <- paste0("TXTs/", gsub(file, pattern = "pdf$", replacement = "txt"))
+  file.create(outf)
   img_dir <- convert_to_imgs(file)
   img_dir <- run_unpaper(img_dir)
   img_ls <- get_sorted_files(img_dir, "png")
-  txt_dir <- ocr_pages(img_ls)
-  outfile <- cat_pages(txt_dir)
+  txt_dir <- ocr_pages(img_ls, outf)
+  # outfile <- cat_pages(txt_dir)
 }
 
 #' Convert a file (PDF) to per-page images (PNG)
@@ -195,7 +197,7 @@ get_sorted_files <- function(path, ext) {
 #' \dontrun{
 #' res <- ocr_pages("test.pdf")
 #' }
-ocr_pages <- function(pngs, verbose = TRUE) {
+ocr_pages <- function(pngs, fin_file, verbose = TRUE) {
   message(pngs)
   res <- list()
   file_dir <- stringr::str_split(pngs[1], "\\.")[[1]][1]
@@ -205,7 +207,7 @@ ocr_pages <- function(pngs, verbose = TRUE) {
             )
   )
   for(i in pngs) {
-    message(i)
+    message(paste("current png:", i))
     txt_base <- gsub(i, pattern = ".png$", replacement = "", fixed = TRUE)
     out_file <- gsub(txt_base, pattern = "IMGs", replacement = "PAGEs")
     err_file <- gsub(txt_base, pattern = "IMGs", replacement = "ERRs")
@@ -217,6 +219,8 @@ ocr_pages <- function(pngs, verbose = TRUE) {
                     " &> ", err_file)
       if(verbose) message(paste("OCR-ing", i))
       tmp <- system(cmd, intern = TRUE)
+      cmd2 <- paste0("cat ", out_file, ".txt >> ", fin_file)
+      tmp <- system(cmd2, intern = TRUE)
     }
     res <- c(res, out_file)
   }
