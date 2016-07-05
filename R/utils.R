@@ -91,3 +91,22 @@ check_embed <- function(file) {
   }
   return(FALSE)
 }
+
+#' Check if file is a PDF
+#'
+#' Some <file>.pdf aren't actually PDFs and should be ignored
+#'
+#' @param file Path to a PDF to check for embedding source
+#' @return Logical: TRUE if a PDF, FALSE if not
+#' @seealso \code{pdftools::pdf_info}
+#' @export
+#' @examples
+#' \dontrun{
+#' res <- check_pdf("test.pdf")
+#' }
+check_pdf <- function(file) {
+  cmd <- paste0("pdftotext '", file, "' &> /dev/null")
+  res <- system(cmd, ignore.stderr = TRUE)
+  if(res != 0) return(FALSE)
+  return(TRUE)
+}

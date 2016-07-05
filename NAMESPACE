@@ -2,6 +2,7 @@
 
 export(cat_pages)
 export(check_embed)
+export(check_pdf)
 export(convert_to_imgs)
 export(get_sorted_files)
 export(load_text)
