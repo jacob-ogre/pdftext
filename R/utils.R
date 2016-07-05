@@ -105,7 +105,7 @@ check_embed <- function(file) {
 #' res <- check_pdf("test.pdf")
 #' }
 check_pdf <- function(file) {
-  cmd <- paste0("pdftotext '", file, "' &> /dev/null")
+  cmd <- paste0("pdftotext '", file, "'")
   res <- system(cmd, ignore.stderr = TRUE)
   if(res != 0) return(FALSE)
   return(TRUE)

@@ -25,6 +25,10 @@
 #' }
 pdf_to_txt <- function(file, thres = 0.2, verbose = TRUE, pre_ocr = TRUE,
                        force = TRUE) {
+  if(!check_pdf(file)) {
+    message(paste0("Not a pdf: ", file))
+    return(list(file=file, status="NOT_PDF", out=NA))
+  }
   out <- suppressWarnings(
            normalizePath(
              paste0(options()$pdftext.wkdir, "/TXTs/",
@@ -33,9 +37,6 @@ pdf_to_txt <- function(file, thres = 0.2, verbose = TRUE, pre_ocr = TRUE,
   )
   out <- gsub(out, pattern = "\\.pdf\\.txt$", replacement = ".txt")
   if(!file.exists(out) | file.info(out)$size < 10 | force) {
-    if(!check_pdf(file)) {
-      return(list(file=file, status="NOT_PDF", out=NA))
-    }
     if(verbose) message(paste("Extracting text from file", file))
     ext_res <- try(text <- pdftools::pdf_text(file))
     ratio <- sum(text == "") / length(text)
