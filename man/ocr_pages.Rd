@@ -9,6 +9,8 @@ ocr_pages(pngs, fin_file, verbose = TRUE)
 \arguments{
 \item{pngs}{A listing of the temp PNG directory for a PDF}
 
+\item{fin_file}{Path to the 'final' text file to be written}
+
 \item{verbose}{Whether to print processing messages [TRUE]}
 }
 \value{

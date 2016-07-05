@@ -34,17 +34,21 @@ pdf_to_txt <- function(file, thres = 0.2, verbose = TRUE, pre_ocr = TRUE,
   out <- gsub(out, pattern = "\\.pdf\\.txt$", replacement = ".txt")
   if(!file.exists(out) | file.info(out)$size < 10 | force) {
     if(verbose) message(paste("Extracting text from file", file))
-    text <- pdftools::pdf_text(file)
+    ext_res <- try(text <- pdftools::pdf_text(file))
     ratio <- sum(text == "") / length(text)
-    if(ratio > thres | !pre_ocr | !check_embed(file)) {
+    if(ratio > thres | (!pre_ocr & !check_embed(file)) |
+          class(ext_res) == "try-error") {
       ocr_pdf(file, verbose)
+      return(list(file=file, status="OCR", out=out))
     } else {
       text <- paste(text, collapse = "\n\f")
       write(text, file = out)
+      return(list(file=file, status="Embed", out=out))
     }
   } else {
     if(verbose) {
       message(paste("File", out, "already exists; skipping extraction"))
+      return(list(file=file, status="Exist", out=out))
     }
   }
 }

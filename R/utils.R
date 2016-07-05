@@ -83,7 +83,7 @@ check_embed <- function(file) {
     if(!is.null(info[[1]]$keys)) {
       if(!is.null(info[[1]]$keys$Producer)) {
         if(grepl(info[[1]]$keys$Producer,
-                 pattern = "Distiller|Word|Library|Ghost|Acrobat Pro")) {
+                 pattern = "Distiller|Word|Library|Ghost|Acrobat Pro|Adobe Acrobat")) {
           return(TRUE)
         }
       }
