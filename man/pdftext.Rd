@@ -32,8 +32,9 @@ user's $PATH:
   \href{http://www.imagemagick.org/script/binary-releases.php}{ImageMagick}}
 \item{\code{unpaper}, which is needed to automate pre-OCR cleanup (e.g.,
   rotation), from \href{http://brew.sh}{Homebrew}, another package manager, or
-  \href{https://github.com/Flameeyes/unpaper}{source on GitHub}.
-  }
+  \href{https://github.com/Flameeyes/unpaper}{source on GitHub}.}
+\item{\code{poppler}, which is used to test if the input file is really a PDF
+  \href{https://poppler.freedesktop.org}{Poppler}}
 }
 
 Install these two applications and you're one step away from having a working

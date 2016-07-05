@@ -8,14 +8,14 @@ The main function of pdftext, `pdf_to_txt`, gets the text either by extracting f
 
 #### SYSTEM DEPENDENCIES
 
-pdftext depends on three applications that must be installed and on the
-user's $PATH:
+pdftext depends on four applications that must be installed and on the user's $PATH:
 
 - tesseract, which is used for OCR, can be installed following the directions [here](https://github.com/tesseract-ocr/tesseract/wiki); 
 - convert, which is used to convert PDFs to images, is part of [ImageMagick](http://www.imagemagick.org/script/binary-releases.php); and
 - unpaper, which is used to prep page images for OCR, can be installed with a package manager like `apt` (Linux Debian distros) or `homebrew` (OS X), or by forking the [repo](https://github.com/Flameeyes/unpaper) and compiling.
+- poppler (`pdftotext`), to test if the "PDF" is actually a PDF.
 
-Install these three applications and you're one step away from having a working package. The last step is to set a couple of options (optionally), as indicated in the startup message when `pdftext` is loaded.
+Install these four applications and you're one step away from having a working package. The last step is to set a couple of options (optionally), as indicated in the startup message when `pdftext` is loaded.
 
 ### Questions? 
 

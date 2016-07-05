@@ -1,6 +1,6 @@
 Package: pdftext
 Title: Extract Text from Text- and Image-based PDFs
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: person("Jacob", "Malcom", email = "jmalcom@defenders.org", role = c("aut", "cre"))
 Description: A large batch of PDFs may contain a mix of text-based and image-
     based PDFs, and one needs to extract the text from all of these files for
