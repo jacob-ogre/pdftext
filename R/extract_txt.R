@@ -14,6 +14,8 @@
 #' @param file Path to the PDF from which text will be extracted
 #' @param thres Threshold number of blank pages to be considered mixed [0.2]
 #' @param verbose Whether to print processing messages [TRUE]
+#' @param pre_ocr Use text layer if from previous OCR [TRUE]
+#' @param force Force text extraction even if TXT file exists [TRUE]
 #' @return Nothing
 #' @seealso \link[pdftools]{pdf_text} \code{\link{load_text}}
 #' @export
@@ -21,7 +23,8 @@
 #' \dontrun{
 #' res <- pdf_to_txt("test.pdf")
 #' }
-pdf_to_txt <- function(file, thres = 0.2, verbose = TRUE, force = TRUE) {
+pdf_to_txt <- function(file, thres = 0.2, verbose = TRUE, pre_ocr = TRUE,
+                       force = TRUE) {
   out <- suppressWarnings(
            normalizePath(
              paste0(options()$pdftext.wkdir, "/TXTs/",
@@ -29,11 +32,11 @@ pdf_to_txt <- function(file, thres = 0.2, verbose = TRUE, force = TRUE) {
            )
   )
   out <- gsub(out, pattern = "\\.pdf\\.txt$", replacement = ".txt")
-  if(!file.exists(out) | file.info(out)$size < 10 | force == TRUE) {
+  if(!file.exists(out) | file.info(out)$size < 10 | force) {
     if(verbose) message(paste("Extracting text from file", file))
     text <- pdftools::pdf_text(file)
     ratio <- sum(text == "") / length(text)
-    if(ratio > thres) {
+    if(ratio > thres | !pre_ocr | !check_embed(file)) {
       ocr_pdf(file, verbose)
     } else {
       text <- paste(text, collapse = "\n\f")
@@ -60,8 +63,9 @@ pdf_to_txt <- function(file, thres = 0.2, verbose = TRUE, force = TRUE) {
 #' res <- ocr_pdf("test.pdf")
 #' }
 ocr_pdf <- function(file, verbose = TRUE) {
-  outf <- paste0("TXTs/", gsub(file, pattern = "pdf$", replacement = "txt"))
-  file.create(outf)
+  outf <- gsub(gsub(file, pattern = "PDFs", replacement = "TXTs"),
+                    pattern = "pdf$", replacement = "txt")
+  system(paste("touch", outf), wait = TRUE)
   img_dir <- convert_to_imgs(file)
   img_dir <- run_unpaper(img_dir)
   img_ls <- get_sorted_files(img_dir, "png")
@@ -114,9 +118,9 @@ convert_to_imgs <- function(file, verbose = TRUE) {
 #' run_unpaper("IMGs/test")
 #' }
 run_unpaper <- function(png_dir) {
-  for(inf in list.files(png_dir, pattern = "[0-9]+[^-up].png$")) {
+  for(inf in list.files(png_dir, pattern = "[0-9]+.png$")) {
     inf <- paste0(png_dir, "/", inf)
-    # first to PNM format
+    # first to PN{g}M format
     out <- stringr::str_replace(inf, pattern = "png$", "pgm")
     if(!file.exists(out)) {
       cmd <- paste0("convert -density 600 -quality 90 ", inf, " ", out)
@@ -127,7 +131,7 @@ run_unpaper <- function(png_dir) {
     # now for unpaper
     out2 <- stringr::str_replace(out, pattern = "\\.pgm$", "-up.pgm")
     if(!file.exists(out2)) {
-      cmd <- paste0("unpaper --overwrite --dpi 600 --no-grayfilter ",
+      cmd <- paste0("unpaper --overwrite -w 0.999 --no-mask-scan ",
                     out, " ", out2)
       res <- system(cmd, intern = TRUE,
                     ignore.stdout = TRUE, ignore.stderr = TRUE)
@@ -187,6 +191,7 @@ get_sorted_files <- function(path, ext) {
 #' \link{set_tess_conf}.
 #'
 #' @param pngs A listing of the temp PNG directory for a PDF
+#' @param fin_file Path to the 'final' text file to be written
 #' @param verbose Whether to print processing messages [TRUE]
 #' @return The path to the OCR'd text file
 #' @seealso \code{\link{pdf_to_txt}}
@@ -197,7 +202,6 @@ get_sorted_files <- function(path, ext) {
 #' res <- ocr_pages("test.pdf")
 #' }
 ocr_pages <- function(pngs, fin_file, verbose = TRUE) {
-  message(pngs)
   res <- list()
   file_dir <- stringr::str_split(pngs[1], "\\.")[[1]][1]
   pngs <- suppressWarnings(
@@ -206,12 +210,9 @@ ocr_pages <- function(pngs, fin_file, verbose = TRUE) {
             )
   )
   for(i in pngs) {
-    message(paste("current png:", i))
-    txt_base <- gsub(i, pattern = ".png$", replacement = "", fixed = TRUE)
+    txt_base <- gsub(i, pattern = ".png", replacement = "", fixed = TRUE)
     out_file <- gsub(txt_base, pattern = "IMGs", replacement = "PAGEs")
     err_file <- gsub(txt_base, pattern = "IMGs", replacement = "ERRs")
-    message(paste("current out_file:", out_file))
-    message(paste("current err_file:", err_file))
     if(!dir.exists(dirname(out_file))) dir.create(dirname(out_file))
     if(!dir.exists(dirname(err_file))) dir.create(dirname(err_file))
     if(!file.exists(paste0(out_file, ".txt"))) {
@@ -220,7 +221,7 @@ ocr_pages <- function(pngs, fin_file, verbose = TRUE) {
                     " &> ", err_file)
       if(verbose) message(paste("OCR-ing", i))
       tmp <- system(cmd, intern = TRUE)
-      cmd2 <- paste0("cat ", out_file, ".txt >> ", fin_file)
+      cmd2 <- paste0("(cat ", out_file, ".txt; echo '\f') >> ", fin_file)
       tmp <- system(cmd2, intern = TRUE)
     }
     res <- c(res, out_file)

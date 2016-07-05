@@ -4,7 +4,7 @@
 \alias{ocr_pages}
 \title{Perform optical character recognition on PNGs.}
 \usage{
-ocr_pages(pngs, verbose = TRUE)
+ocr_pages(pngs, fin_file, verbose = TRUE)
 }
 \arguments{
 \item{pngs}{A listing of the temp PNG directory for a PDF}

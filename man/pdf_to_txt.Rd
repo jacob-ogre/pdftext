@@ -4,7 +4,8 @@
 \alias{pdf_to_txt}
 \title{Extract text from a pdf and write to a txt file}
 \usage{
-pdf_to_txt(file, thres = 0.2, verbose = TRUE)
+pdf_to_txt(file, thres = 0.2, verbose = TRUE, pre_ocr = TRUE,
+  force = TRUE)
 }
 \arguments{
 \item{file}{Path to the PDF from which text will be extracted}
@@ -12,6 +13,10 @@ pdf_to_txt(file, thres = 0.2, verbose = TRUE)
 \item{thres}{Threshold number of blank pages to be considered mixed [0.2]}
 
 \item{verbose}{Whether to print processing messages [TRUE]}
+
+\item{pre_ocr}{Use text layer if from previous OCR [TRUE]}
+
+\item{force}{Force text extraction even if TXT file exists [TRUE]}
 }
 \value{
 Nothing

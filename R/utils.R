@@ -56,3 +56,38 @@ set_tess_conf <- function(conf) {
 set_wkdir <- function(wkdir) {
   options("pdftext.wkdir" = wkdir)
 }
+
+#' Check if text embed is not from OCR
+#'
+#' Some PDFs have an embedded text layer that is derived from OCR by the scanner
+#' or other equipment that produced the PDF. Such documents are more likely to
+#' have fundamental errors, e.g., mis-OCR'd columnar text, that can be solved
+#' by using OCR rather than extracting the text layer.
+#'
+#' @param file Path to a PDF to check for embedding source
+#' @return Logical: TRUE if good embed, FALSE if from OCR
+#' @seealso \code{pdftools::pdf_info}
+#' @export
+#' @examples
+#' \dontrun{
+#' # res <- summarize_gold("test.pdf", text)
+#' }
+check_embed <- function(file) {
+  temp <- pdftools::pdf_info(file)
+  if(length(temp) > 1) {
+    info <- list(temp)
+  } else {
+    info <- temp
+  }
+  if(!is.atomic(info[[1]][1]) & !is.na(info[[1]][1])) {
+    if(!is.null(info[[1]]$keys)) {
+      if(!is.null(info[[1]]$keys$Producer)) {
+        if(grepl(info[[1]]$keys$Producer,
+                 pattern = "Distiller|Word|Library|Ghost|Acrobat Pro")) {
+          return(TRUE)
+        }
+      }
+    }
+  }
+  return(FALSE)
+}

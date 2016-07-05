@@ -10,7 +10,7 @@ run_unpaper(png_dir)
 \item{png_dir}{Path to a directory of raw PNGs}
 }
 \value{
-Nothing
+png_dir Path to a directory with 'unpaper'-ed PNGs
 }
 \description{
 A significant number of scanned PDFs are slightly rotated, and even a 1-
@@ -19,7 +19,7 @@ computationally expensive step, but works much better than not doing it.
 }
 \examples{
 \dontrun{
-run_unpaper("IMGs/test/test.png")
+run_unpaper("IMGs/test")
 }
 }
 
