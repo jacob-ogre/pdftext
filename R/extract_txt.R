@@ -36,7 +36,7 @@ pdf_to_txt <- function(file, thres = 0.2, verbose = TRUE, pre_ocr = TRUE,
            )
   )
   out <- gsub(out, pattern = "\\.pdf\\.txt$", replacement = ".txt")
-  if(!file.exists(out) | file.info(out)$size < 10 | force) {
+  if(!file.exists(out) | file.info(out)$size < 500 | force) {
     if(verbose) message(paste("Extracting text from file", file))
     ext_res <- try(text <- pdftools::pdf_text(file))
     ratio <- sum(text == "") / length(text)
@@ -106,7 +106,7 @@ convert_to_imgs <- function(file, verbose = TRUE) {
   test_file <- stringr::str_replace(out, "\\.png", "-0\\.png")
   if(!file.exists(test_file)) {
     if(verbose) message(paste("Making PNGs of file", file))
-    cmd <- paste0("convert -density 600 -quality 90 ", file, " ", out)
+    cmd <- paste0("convert -density 300 -quality 90 ", file, " ", out)
     res <- system(cmd, intern = TRUE)
   }
   return(dirname(out))
@@ -131,7 +131,7 @@ run_unpaper <- function(png_dir) {
     # first to PN{g}M format
     out <- stringr::str_replace(inf, pattern = "png$", "pgm")
     if(!file.exists(out)) {
-      cmd <- paste0("convert -density 600 -quality 90 ", inf, " ", out)
+      cmd <- paste0("convert -density 300 -quality 90 ", inf, " ", out)
       res <- system(cmd, intern = TRUE,
                     ignore.stdout = TRUE, ignore.stderr = TRUE)
     }
@@ -149,10 +149,10 @@ run_unpaper <- function(png_dir) {
     # call of convert...-blur 2x2 on a pbm just fails.
     out3 <- stringr::str_replace(out2, pattern = "-up.pgm$", "-up.png")
     if(!file.exists(out3)) {
-      cmd <- paste0("convert -density 600 -quality 90 ", out2, " ", out3)
+      cmd <- paste0("convert -density 300 -quality 90 ", out2, " ", out3)
       res <- system(cmd, intern = TRUE,
                     ignore.stdout = TRUE, ignore.stderr = TRUE)
-      cmd <- paste0("convert -density 600 -quality 90 -blur 2x2 ", out3, " ", out3)
+      cmd <- paste0("convert -density 300 -quality 90 -blur 2x2 ", out3, " ", out3)
       res <- system(cmd, intern = TRUE,
                     ignore.stdout = TRUE, ignore.stderr = TRUE)
     }
