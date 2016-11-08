@@ -16,7 +16,7 @@
   tess_cmd <- "which tesseract"
   checks <- c(gs_cmd, conv_cmd, pdftk_cmd, tess_cmd)
   for(i in checks) {
-    if(grepl(system(i, intern = TRUE), "not found")) {
+    if(grepl(system(i, intern = TRUE), pattern = "not found")) {
       cmd <- gsub(i, pattern = "which ", replacement = "")
       warning(paste(cmd, "is not installed or is not on your $PATH;",
                  "please check and try to load again"))
